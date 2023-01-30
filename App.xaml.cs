@@ -1,6 +1,7 @@
 ﻿using DevTrustTest.Interfaces;
 using DevTrustTest.Services;
 using DevTrustTest.ViewModels;
+using DevTrustTest.ViewModels.Commands;
 using DevTrustTest.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,7 +24,8 @@ public partial class App : Application
 				services.AddSingleton<MainWindow>();
                 services.AddSingleton<CarsView>();
                 services.AddTransient<CarsViewModel>();
-				services.AddTransient<ICarDataService, DummyCarDataService>();
+                services.AddTransient<LoadToFileCommander>();
+                services.AddTransient<ICarDataService, DummyCarDataService>();
 			})
 			.Build();
 	}

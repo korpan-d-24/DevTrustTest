@@ -7,5 +7,5 @@ namespace DevTrustTest.Interfaces;
 
 public interface ICarDataService
 {
-    public Task<List<CarModel>> GetCarData();
+    public List<CarModel> GetCarData();
 }

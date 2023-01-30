@@ -9,7 +9,7 @@ namespace DevTrustTest.Services;
 
 internal class DummyCarDataService : ICarDataService
 {
-    public async Task<List<CarModel>> GetCarData()
+    public List<CarModel> GetCarData()
     {
         var data = new List<CarModel>();
         for (var i = 0; i < 15; i++)

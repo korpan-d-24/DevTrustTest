@@ -1,10 +1,10 @@
-﻿using DevExpress.Data.Async;
-using DevExpress.Mvvm.Native;
+﻿using DevExpress.Mvvm.Native;
 using DevTrustTest.Interfaces;
 using DevTrustTest.Models;
-using System.Collections.Generic;
+using DevTrustTest.ViewModels.Commands;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 
 namespace DevTrustTest.ViewModels;
 
@@ -38,16 +38,40 @@ public class CarsViewModel : INotifyPropertyChanged
             RaisePropertyChange(nameof(SelectedCars));
         }
     }
+    private ObservableCollection<string> _selectedCarsStringRecords = new();
+    public ObservableCollection<string> SelectedCarsStringRecords
+    {
+        get => _selectedCarsStringRecords;
+        set
+        {
+            if (_selectedCarsStringRecords == value)
+                return;
+            _selectedCarsStringRecords = value;
+            RaisePropertyChange(nameof(SelectedCarsStringRecords));
+        }
+    }
     #endregion
+
+    #region Command
+    public LoadToFileCommander SaveToFileCommand { get; private set; }
+    #endregion
+
     public CarsViewModel(ICarDataService CarDataService)
     {
         _carDataService = CarDataService;
-        InitilazeData();
+        CarData = _carDataService.GetCarData().ToObservableCollection();
+        SaveToFileCommand = new LoadToFileCommander(LoadToFile);
     }
-    private async void InitilazeData()
+    public void LoadToFile(string message)
     {
-       CarData = (await _carDataService.GetCarData()).ToObservableCollection();
+        foreach (var car in SelectedCars)
+            SelectedCarsStringRecords.Add(car.ToString());
+        if(message.Equals("- in CSV"))
+            File.WriteAllLines("C:\\Users\\Asus\\Desktop\\DevTrustTest\\SavedLists.csv", SelectedCarsStringRecords);
+        else if (message.Equals("- in TXT"))
+            File.WriteAllLines("C:\\Users\\Asus\\Desktop\\DevTrustTest\\SavedLists.txt", SelectedCarsStringRecords);
     }
+
     #region INotifyChangeProperty
     public event PropertyChangedEventHandler PropertyChanged;
 
